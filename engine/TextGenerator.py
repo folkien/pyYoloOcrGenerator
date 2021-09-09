@@ -36,7 +36,12 @@ class TextGenerator:
         # Last used character number
         self.lastCharacter = 0
         # List of used fonts
-        self.fonts = ['FiraCode-Light.ttf']
+        self.fonts = ['Autobabahn.ttf',
+                      'Kenteken.ttf',
+                      'LicensePlate.ttf',
+                      'PlatNomor.ttf',
+                      'Uknumberplate.ttf', ]
+
         # Spacing - 5px
         self.spacing = 5
         # Margin
@@ -92,7 +97,7 @@ class TextGenerator:
 
             # 2. Annotating
             # --------------------------
-            x1, y1, x2, y2 = posx, posy, posx+fontWidth, posy+fontHeight
+            x1, y1, x2, y2 = posx, posy, posx+textWidth, posy+textHeight
             rectRel = ToRelative((x1, y1, x2, y2), imwidth, imheight)
             annotations.append(CreateAnnotationfromDetection(
                 (self.lastCharacter, 1.0, rectRel)))
