@@ -20,6 +20,12 @@ parser.add_argument('-yh', '--yoloheight', type=int, nargs='?', const=416, defau
                     required=False, help='Yolo height, default 416')
 parser.add_argument('-n', '--nsamples', type=int, nargs='?', const=25, default=25,
                     required=False, help='Number of generated samples')
+parser.add_argument('-an', '--offset', type=int, nargs='?', const=0, default=0,
+                    required=False, help='Offset of annotations numbers')
+parser.add_argument('-cs', '--characterSet', type=int, nargs='?', const=2, default=2,
+                    required=False, help='Number of characters set')
+parser.add_argument('-rl', '--rownLength', type=int, nargs='?', const=5, default=5,
+                    required=False, help='Row length in characters')
 parser.add_argument('-v', '--verbose', action='store_true',
                     required=False, help='Show verbose finded and processed data')
 args = parser.parse_args()
@@ -32,7 +38,9 @@ else:
 logging.debug('Logging enabled!')
 
 logging.info('Images creation started!')
-generator = TextGenerator()
+generator = TextGenerator(characterListNumber=args.characterSet,
+                          rowLength=args.rowLength,
+                          annotationOffset=args.offset)
 for i in range(args.nsamples):
     im = CreateImage(args.yolowidth, args.yoloheight, color=GetRandomColor())
     # Generate annotations on image

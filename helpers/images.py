@@ -36,7 +36,7 @@ def GetTTFontSize(text, fontName='Roboto.ttf', fontSize=20):
     return font.getsize(text)
 
 
-def DrawTextTTF(image, text, anchor, fontName='Roboto.ttf', fontSize=80):
+def DrawTextTTF(image, text, anchor, fontName='Roboto.ttf', fontSize=80, color=(255, 255, 255)):
     ''' Draw TrueTypeFont text.'''
     # Pass the image to PIL
     pil_im = Image.fromarray(image)
@@ -46,7 +46,7 @@ def DrawTextTTF(image, text, anchor, fontName='Roboto.ttf', fontSize=80):
     # Get width and height of text
     width, height = font.getsize(text)
     # Draw the text
-    draw.text(anchor, text, font=font)
+    draw.text(anchor, text, font=font, fill=color)
     # Get back the image to OpenCV
     return cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR), width, height
 

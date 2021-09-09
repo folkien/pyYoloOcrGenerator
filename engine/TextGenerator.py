@@ -7,11 +7,14 @@ import logging
 from helpers.images import DrawTextTTF, GetTTFontSize
 from random import randint
 from helpers.Annotation import CreateAnnotationfromDetection, ToRelative
+from helpers.colors import GetNextTableColor, GetRandomBlackWhite
+from reportlab.platypus.tables import _rowLen
 
 # Diffrent characters lists
-charactersLists = ['12345678890',
+charactersLists = ['1234567890',
                    'qwertyuiopasdfghjklzxcvbnm',
-                   '12345678890qwertyuiopasdfghjklzxcvbnm'
+                   '1234567890qwertyuiopasdfghjklzxcvbnm',
+                   '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
                    ]
 
 
@@ -22,14 +25,17 @@ class TextGenerator:
 
     def __init__(self,
                  characterListNumber=2,
-                 rows=2,
-                 uppercase=True):
+                 rowLength=2,
+                 uppercase=True,
+                 annotationOffset=0,
+                 ):
         '''
         Constructor
         '''
         # Configuration
         self.config = {'Uppercase': uppercase,  # All letters will be uppercase
-                       'Rows': rows,  # Max number of rows
+                       'RownLength': rowLength,  # Max number of rows
+                       'AnnotationOffset': annotationOffset,  # Offset of annotation numbers
                        }
         # Used characters list
         self.characters = list(charactersLists[characterListNumber])
@@ -57,7 +63,7 @@ class TextGenerator:
         # Calculate for font size 20
         fontSize = 20
         width, height = GetTTFontSize(text, fontName, fontSize)
-        ratio = int(imwidth/(width*rowLength))
+        ratio = int(imwidth/(width*rowLength*1.25))
         fontSize = int(fontSize * ratio)
 
         # Read again and return
@@ -71,13 +77,11 @@ class TextGenerator:
         annotations = []
         # Get image properties
         imheight, imwidth = image.shape[0:2]
-        # Row length [ in characters ]
-        rowLength = 5
         # Get font name
         fontName = self.fonts[randint(0, len(self.fonts)-1)]
         # Get font size
         fontSize, fontWidth, fontHeight = self.CalculateFontSize(
-            imwidth, rowLength, fontName)
+            imwidth, self.config['RowLength'], fontName)
 
         # Set start position
         posy = self.margin
@@ -95,15 +99,19 @@ class TextGenerator:
                 if (self.config['Uppercase']):
                     text = text.upper()
                 # Draw character
-                image, textWidth, textHeight = DrawTextTTF(
-                    image, text, (posx, posy), fontName, fontSize)
+                image, textWidth, textHeight = DrawTextTTF(image,
+                                                           text,
+                                                           (posx, posy),
+                                                           fontName,
+                                                           fontSize,
+                                                           color=GetRandomBlackWhite())
 
                 # 2. Annotating
                 # --------------------------
                 x1, y1, x2, y2 = posx, posy, posx+textWidth, posy+textHeight
                 rectRel = ToRelative((x1, y1, x2, y2), imwidth, imheight)
                 annotations.append(CreateAnnotationfromDetection(
-                    (self.lastCharacter, 1.0, rectRel)))
+                    (self.lastCharacter+self.config['AnnotationOffset'], 1.0, rectRel)))
 
                 # 3. Move right and next line. Forward character number
                 posx += textWidth + self.spacing
@@ -111,7 +119,7 @@ class TextGenerator:
                 self.lastCharacter %= len(self.characters)
 
             # Increment row
-            posy += textHeight
+            posy += textHeight + self.spacing
 
         logging.debug('(TextGenerator) Annotated image.')
         return image, annotations
