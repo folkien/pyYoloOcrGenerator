@@ -3,6 +3,7 @@ Created on 9 wrz 2021
 
 @author: spasz
 '''
+import logging
 from helpers.images import DrawTextTTF, GetTTFontSize
 from random import randint
 
@@ -35,6 +36,10 @@ class TextGenerator:
         self.lastCharacter = 0
         # List of used fonts
         self.fonts = ['FiraCode-Light.ttf']
+        # Spacing - 5px
+        self.spacing = 5
+        # Margin
+        self.margin = 5
 
     def CalculateFontSize(self, imwidth, rowLength, fontName):
         ''' Calculate used font size.'''
@@ -48,7 +53,10 @@ class TextGenerator:
         width, height = GetTTFontSize(text, fontName, fontSize)
         ratio = int(imwidth/(width*rowLength))
         fontSize = int(fontSize * ratio)
-        return fontSize
+
+        # Read again and return
+        width, height = GetTTFontSize(text, fontName, fontSize)
+        return fontSize, width, height
 
     def Annotate(self, image):
         ''' Annotate image inside and return
@@ -62,21 +70,26 @@ class TextGenerator:
         # Get font name
         fontName = self.fonts[randint(0, len(self.fonts)-1)]
         # Get font size
-        fontSize = self.CalculateFontSize(imwidth, rowLength, fontName)
+        fontSize, fontWidth, fontHeight = self.CalculateFontSize(
+            imwidth, rowLength, fontName)
 
-        # Only one row
-        posx = 0
-        while (posx < (imwidth)):
+        # Set start position
+        posx = self.margin
+        posy = self.margin
+        # Draw characters in loop
+        while (posx < (imwidth-fontWidth-self.spacing-self.margin)):
             # Get character
             text = self.characters[self.lastCharacter]
             self.lastCharacter += 1
+            self.lastCharacter %= len(self.characters)
             # Uppercase if needed
             if (self.config['Uppercase']):
                 text = text.upper()
             # Draw character
             image, textWidth, textHeight = DrawTextTTF(
-                image, text, (posx, 0), fontName, fontSize)
+                image, text, (posx, posy), fontName, fontSize)
             # Move right
-            posx += textWidth
+            posx += textWidth + self.spacing
 
+        logging.debug('(TextGenerator) Annotated image.')
         return image, annotations
