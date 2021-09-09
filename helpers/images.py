@@ -12,14 +12,20 @@ import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 
 
-def CreateImage(width=1, height=1, depth=3):
+def CreateImage(width=1, height=1, depth=3, color=(0, 0, 0)):
     ''' Creates new opencv/numpy image.'''
-    return np.zeros((height, width, depth), np.uint8)
+    return np.full((height, width, depth), color, np.uint8)
 
 
 def SaveImage(im, filepath):
     ''' Save image file.'''
     cv2.imwrite(filepath, im)
+
+
+def FillImage(im, color):
+    ''' Fill image with color.'''
+    h, w, d = im.shape
+    return CreateImage(w, h, d, color)
 
 
 def DrawTextTTF(image, text, anchor, fontSize=80):

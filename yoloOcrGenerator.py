@@ -1,9 +1,9 @@
-
 #!/usr/bin/python3
 import logging
 import argparse
 import sys
 from helpers.images import CreateImage, SaveImage
+from helpers.colors import GetRandomColor
 from helpers.files import RenameToSha1Filepath, FixPath, GetFilepath,\
     GetNotExistingSha1Filepath
 from helpers.hashing import GetRandomSha1
@@ -31,7 +31,7 @@ logging.debug('Logging enabled!')
 
 logging.info('Images creation started!')
 for i in range(args.nsamples):
-    im = CreateImage(args.yolowidth, args.yoloheight)
+    im = CreateImage(args.yolowidth, args.yoloheight, color=GetRandomColor())
     # Draw text on image
 
     # Create filename image and annotations
