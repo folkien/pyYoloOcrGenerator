@@ -22,7 +22,7 @@ parser.add_argument('-n', '--nsamples', type=int, nargs='?', const=25, default=2
                     required=False, help='Number of generated samples')
 parser.add_argument('-an', '--offset', type=int, nargs='?', const=0, default=0,
                     required=False, help='Offset of annotations numbers')
-parser.add_argument('-cs', '--characterSet', type=int, nargs='?', const=2, default=2,
+parser.add_argument('-cs', '--characterSet', type=int, nargs='?', const=3, default=3,
                     required=False, help='Number of characters set')
 parser.add_argument('-rl', '--rowLength', type=int, nargs='?', const=5, default=5,
                     required=False, help='Row length in characters')

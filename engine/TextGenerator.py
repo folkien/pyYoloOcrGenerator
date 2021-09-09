@@ -24,7 +24,7 @@ class TextGenerator:
     '''
 
     def __init__(self,
-                 characterListNumber=2,
+                 characterListNumber=3,
                  rowLength=2,
                  uppercase=True,
                  annotationOffset=0,
