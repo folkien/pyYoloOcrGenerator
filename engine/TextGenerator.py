@@ -82,30 +82,36 @@ class TextGenerator:
         # Set start position
         posx = self.margin
         posy = self.margin
-        # Draw characters in loop
-        while (posx < (imwidth-fontWidth-self.spacing-self.margin)):
-            # 1. Drawing
-            # --------------------------
-            # Get character
-            text = self.characters[self.lastCharacter]
-            # Uppercase if needed
-            if (self.config['Uppercase']):
-                text = text.upper()
-            # Draw character
-            image, textWidth, textHeight = DrawTextTTF(
-                image, text, (posx, posy), fontName, fontSize)
+        # Draw characters in whole image
+        while (posy < (imheight-fontHeight-self.margin)):
 
-            # 2. Annotating
-            # --------------------------
-            x1, y1, x2, y2 = posx, posy, posx+textWidth, posy+textHeight
-            rectRel = ToRelative((x1, y1, x2, y2), imwidth, imheight)
-            annotations.append(CreateAnnotationfromDetection(
-                (self.lastCharacter, 1.0, rectRel)))
+            # Draw characters line in loop
+            while (posx < (imwidth-fontWidth-self.spacing-self.margin)):
+                # 1. Drawing
+                # --------------------------
+                # Get character
+                text = self.characters[self.lastCharacter]
+                # Uppercase if needed
+                if (self.config['Uppercase']):
+                    text = text.upper()
+                # Draw character
+                image, textWidth, textHeight = DrawTextTTF(
+                    image, text, (posx, posy), fontName, fontSize)
 
-            # 3. Move right and next line. Forward character number
-            posx += textWidth + self.spacing
-            self.lastCharacter += 1
-            self.lastCharacter %= len(self.characters)
+                # 2. Annotating
+                # --------------------------
+                x1, y1, x2, y2 = posx, posy, posx+textWidth, posy+textHeight
+                rectRel = ToRelative((x1, y1, x2, y2), imwidth, imheight)
+                annotations.append(CreateAnnotationfromDetection(
+                    (self.lastCharacter, 1.0, rectRel)))
+
+                # 3. Move right and next line. Forward character number
+                posx += textWidth + self.spacing
+                self.lastCharacter += 1
+                self.lastCharacter %= len(self.characters)
+
+            # Increment row
+            posy += textHeight
 
         logging.debug('(TextGenerator) Annotated image.')
         return image, annotations
