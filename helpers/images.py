@@ -28,17 +28,27 @@ def FillImage(im, color):
     return CreateImage(w, h, d, color)
 
 
-def DrawTextTTF(image, text, anchor, fontSize=80):
+def GetTTFontSize(text, fontName='Roboto.ttf', fontSize=20):
+    ''' Draw TrueTypeFont text.'''
+    # Pass the image to PIL
+    font = ImageFont.truetype(fontName, fontSize)
+    # Get width and height of text
+    return font.getsize(text)
+
+
+def DrawTextTTF(image, text, anchor, fontName='Roboto.ttf', fontSize=80):
     ''' Draw TrueTypeFont text.'''
     # Pass the image to PIL
     pil_im = Image.fromarray(image)
     draw = ImageDraw.Draw(pil_im)
     # use a truetype font
-    font = ImageFont.truetype('PAPYRUS.ttf', fontSize)
+    font = ImageFont.truetype(fontName, fontSize)
+    # Get width and height of text
+    width, height = font.getsize(text)
     # Draw the text
     draw.text(anchor, text, font=font)
     # Get back the image to OpenCV
-    return cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)
+    return cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR), width, height
 
 
 def GetResizedHeightToWidth(width, height, maxWidth=1280):

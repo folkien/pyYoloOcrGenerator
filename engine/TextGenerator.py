@@ -3,7 +3,8 @@ Created on 9 wrz 2021
 
 @author: spasz
 '''
-from helpers.images import DrawTextTTF
+from helpers.images import DrawTextTTF, GetTTFontSize
+from random import randint
 
 # Diffrent characters lists
 charactersLists = ['12345678890',
@@ -33,7 +34,21 @@ class TextGenerator:
         # Last used character number
         self.lastCharacter = 0
         # List of used fonts
-        self.fonts = ['Roboto.ttf']
+        self.fonts = ['FiraCode-Light.ttf']
+
+    def CalculateFontSize(self, imwidth, rowLength, fontName):
+        ''' Calculate used font size.'''
+        # Use first character
+        text = self.characters[0]
+        if (self.config['Uppercase']):
+            text = text.upper()
+
+        # Calculate for font size 20
+        fontSize = 20
+        width, height = GetTTFontSize(text, fontName, fontSize)
+        ratio = int(imwidth/(width*rowLength))
+        fontSize = int(fontSize * ratio)
+        return fontSize
 
     def Annotate(self, image):
         ''' Annotate image inside and return
@@ -44,8 +59,10 @@ class TextGenerator:
         imheight, imwidth = image.shape[0:2]
         # Row length [ in characters ]
         rowLength = 5
+        # Get font name
+        fontName = self.fonts[randint(0, len(self.fonts)-1)]
         # Get font size
-        fontSize = 40
+        fontSize = self.CalculateFontSize(imwidth, rowLength, fontName)
 
         # Only one row
         posx = 0
@@ -53,7 +70,13 @@ class TextGenerator:
             # Get character
             text = self.characters[self.lastCharacter]
             self.lastCharacter += 1
+            # Uppercase if needed
+            if (self.config['Uppercase']):
+                text = text.upper()
             # Draw character
-            image = DrawTextTTF(image, text, (posx, 0), fontSize)
+            image, textWidth, textHeight = DrawTextTTF(
+                image, text, (posx, 0), fontName, fontSize)
+            # Move right
+            posx += textWidth
 
         return image, annotations
