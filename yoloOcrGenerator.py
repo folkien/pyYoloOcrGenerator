@@ -24,7 +24,7 @@ parser.add_argument('-an', '--offset', type=int, nargs='?', const=0, default=0,
                     required=False, help='Offset of annotations numbers')
 parser.add_argument('-cs', '--characterSet', type=int, nargs='?', const=2, default=2,
                     required=False, help='Number of characters set')
-parser.add_argument('-rl', '--rownLength', type=int, nargs='?', const=5, default=5,
+parser.add_argument('-rl', '--rowLength', type=int, nargs='?', const=5, default=5,
                     required=False, help='Row length in characters')
 parser.add_argument('-v', '--verbose', action='store_true',
                     required=False, help='Show verbose finded and processed data')

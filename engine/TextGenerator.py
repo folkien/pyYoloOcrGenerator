@@ -34,7 +34,7 @@ class TextGenerator:
         '''
         # Configuration
         self.config = {'Uppercase': uppercase,  # All letters will be uppercase
-                       'RownLength': rowLength,  # Max number of rows
+                       'RowLength': rowLength,  # Max number of rows
                        'AnnotationOffset': annotationOffset,  # Offset of annotation numbers
                        }
         # Used characters list
