@@ -80,10 +80,10 @@ class TextGenerator:
             imwidth, rowLength, fontName)
 
         # Set start position
-        posx = self.margin
         posy = self.margin
         # Draw characters in whole image
         while (posy < (imheight-fontHeight-self.margin)):
+            posx = self.margin
 
             # Draw characters line in loop
             while (posx < (imwidth-fontWidth-self.spacing-self.margin)):
