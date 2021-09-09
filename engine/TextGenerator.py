@@ -6,6 +6,7 @@ Created on 9 wrz 2021
 import logging
 from helpers.images import DrawTextTTF, GetTTFontSize
 from random import randint
+from helpers.Annotation import CreateAnnotationfromDetection, ToRelative
 
 # Diffrent characters lists
 charactersLists = ['12345678890',
@@ -78,18 +79,28 @@ class TextGenerator:
         posy = self.margin
         # Draw characters in loop
         while (posx < (imwidth-fontWidth-self.spacing-self.margin)):
+            # 1. Drawing
+            # --------------------------
             # Get character
             text = self.characters[self.lastCharacter]
-            self.lastCharacter += 1
-            self.lastCharacter %= len(self.characters)
             # Uppercase if needed
             if (self.config['Uppercase']):
                 text = text.upper()
             # Draw character
             image, textWidth, textHeight = DrawTextTTF(
                 image, text, (posx, posy), fontName, fontSize)
-            # Move right
+
+            # 2. Annotating
+            # --------------------------
+            x1, y1, x2, y2 = posx, posy, posx+fontWidth, posy+fontHeight
+            rectRel = ToRelative((x1, y1, x2, y2), imwidth, imheight)
+            annotations.append(CreateAnnotationfromDetection(
+                (self.lastCharacter, 1.0, rectRel)))
+
+            # 3. Move right and next line. Forward character number
             posx += textWidth + self.spacing
+            self.lastCharacter += 1
+            self.lastCharacter %= len(self.characters)
 
         logging.debug('(TextGenerator) Annotated image.')
         return image, annotations

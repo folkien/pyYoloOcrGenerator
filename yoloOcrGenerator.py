@@ -8,6 +8,7 @@ from engine.TextGenerator import TextGenerator
 from helpers.files import RenameToSha1Filepath, FixPath, GetFilepath,\
     GetNotExistingSha1Filepath
 from helpers.hashing import GetRandomSha1
+from helpers.Annotations import SaveAnnotations
 
 # Arguments and config
 parser = argparse.ArgumentParser()
@@ -43,5 +44,6 @@ for i in range(args.nsamples):
     # Save image with text data
     SaveImage(im, imgpath)
     # Save annotations
+    SaveAnnotations(txtpath, annotations)
 
 logging.info('Images creation finished.')
