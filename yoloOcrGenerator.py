@@ -4,6 +4,7 @@ import argparse
 import sys
 from helpers.images import CreateImage, SaveImage
 from helpers.colors import GetRandomColor
+from engine.TextGenerator import TextGenerator
 from helpers.files import RenameToSha1Filepath, FixPath, GetFilepath,\
     GetNotExistingSha1Filepath
 from helpers.hashing import GetRandomSha1
@@ -30,10 +31,11 @@ else:
 logging.debug('Logging enabled!')
 
 logging.info('Images creation started!')
+generator = TextGenerator()
 for i in range(args.nsamples):
     im = CreateImage(args.yolowidth, args.yoloheight, color=GetRandomColor())
-    # Draw text on image
-
+    # Generate annotations on image
+    im, annotations = generator.Annotate(im)
     # Create filename image and annotations
     _name, imgpath = GetNotExistingSha1Filepath(
         GetRandomSha1()+'.png', FixPath(args.output))

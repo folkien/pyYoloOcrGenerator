@@ -38,3 +38,22 @@ class TextGenerator:
     def Annotate(self, image):
         ''' Annotate image inside and return
         image and annotations list.'''
+        # Init annotations list
+        annotations = []
+        # Get image properties
+        imheight, imwidth = image.shape[0:2]
+        # Row length [ in characters ]
+        rowLength = 5
+        # Get font size
+        fontSize = 40
+
+        # Only one row
+        posx = 0
+        while (posx < (imwidth)):
+            # Get character
+            text = self.characters[self.lastCharacter]
+            self.lastCharacter += 1
+            # Draw character
+            image = DrawTextTTF(image, text, (posx, 0), fontSize)
+
+        return image, annotations
