@@ -42,6 +42,7 @@ def GetNotExistingSha1Filepath(filename, dirpath):
     ''' Returns new SHA-1 Filepath.'''
     extension = GetExtension(filename).lower()
     newFilepath = dirpath+filename
+    newFilename = filename
 
     # Try random hash until find not existsing file
     while (os.path.isfile(newFilepath) and os.access(newFilepath, os.R_OK)):

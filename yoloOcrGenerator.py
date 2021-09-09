@@ -4,7 +4,9 @@ import logging
 import argparse
 import sys
 from helpers.images import CreateImage, SaveImage
-from helpers.files import RenameToSha1Filepath, FixPath, GetFilepath
+from helpers.files import RenameToSha1Filepath, FixPath, GetFilepath,\
+    GetNotExistingSha1Filepath
+from helpers.hashing import GetRandomSha1
 
 # Arguments and config
 parser = argparse.ArgumentParser()
@@ -27,13 +29,17 @@ else:
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 logging.debug('Logging enabled!')
 
+logging.info('Images creation started!')
 for i in range(args.nsamples):
     im = CreateImage(args.yolowidth, args.yoloheight)
     # Draw text on image
 
     # Create filename image and annotations
-    imgpath = RenameToSha1Filepath('1.png', FixPath(args.output))
+    _name, imgpath = GetNotExistingSha1Filepath(
+        GetRandomSha1()+'.png', FixPath(args.output))
     txtpath = GetFilepath(imgpath) + '.txt'
     # Save image with text data
     SaveImage(im, imgpath)
     # Save annotations
+
+logging.info('Images creation finished.')
