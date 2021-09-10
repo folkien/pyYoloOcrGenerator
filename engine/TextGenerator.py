@@ -39,6 +39,9 @@ class TextGenerator:
                        }
         # Used characters list
         self.characters = list(charactersLists[characterListNumber])
+        # Uppercase if needed
+        if (self.config['Uppercase']):
+            self.characters = [char.upper() for char in self.characters]
         # Last used character number
         self.lastCharacter = 0
         # List of used fonts
@@ -46,28 +49,47 @@ class TextGenerator:
                       'Kenteken.ttf',
                       'LicensePlate.ttf',
                       'PlatNomor.ttf',
-                      'Uknumberplate.ttf', ]
+                      'Uknumberplate.ttf',
+                      'din1451alt.ttf',
+                      'Roboto-Light.ttf',
+                      ]
 
         # Spacing - 5px
         self.spacing = 5
         # Margin
         self.margin = 5
+        # Cache
+        self.cache = dict()
+
+    def GetMaxCharsetFontSize(self, charset, fontName='Roboto.ttf', fontSize=20):
+        ''' Draw TrueTypeFont text.'''
+        # 1. Chech cache entry and return
+        keyCache = '%s%u' % (fontName, fontSize)
+        if (keyCache in self.cache.keys()):
+            return self.cache[keyCache]
+
+        # 2. Manually calculate
+        maxwidth, maxheight = 0, 0
+        for letter in charset:
+            width, height = GetTTFontSize(letter, fontName, fontSize)
+            maxwidth = max(maxwidth, width)
+            maxheight = max(maxheight, height)
+
+        # 3. Save in cache
+        self.cache[keyCache] = (maxwidth, maxheight)
+        return maxwidth, maxheight
 
     def CalculateFontSize(self, imwidth, rowLength, fontName):
         ''' Calculate used font size.'''
-        # Use first character
-        text = self.characters[0]
-        if (self.config['Uppercase']):
-            text = text.upper()
-
         # Calculate for font size 20
         fontSize = 20
-        width, height = GetTTFontSize(text, fontName, fontSize)
-        ratio = int(imwidth/(width*rowLength*1.25))
+        width, height = self.GetMaxCharsetFontSize(
+            self.characters, fontName, fontSize)
+        ratio = int(imwidth/(width*rowLength))
         fontSize = int(fontSize * ratio)
-
-        # Read again and return
-        width, height = GetTTFontSize(text, fontName, fontSize)
+        # Return new font width and height
+        width, height = self.GetMaxCharsetFontSize(
+            self.characters, fontName, fontSize)
         return fontSize, width, height
 
     def Annotate(self, image):
