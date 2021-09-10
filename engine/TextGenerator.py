@@ -7,7 +7,8 @@ import logging
 from helpers.images import DrawTextTTF, GetTTFontSize
 from random import randint
 from helpers.Annotation import CreateAnnotationfromDetection, ToRelative
-from helpers.colors import GetNextTableColor, GetRandomBlackWhite
+from helpers.colors import GetNextTableColor, GetRandomBlackWhite,\
+    GetRandomPlateColor
 from reportlab.platypus.tables import _rowLen
 
 # Diffrent characters lists
@@ -52,6 +53,7 @@ class TextGenerator:
                       'Uknumberplate.ttf',
                       'din1451alt.ttf',
                       'Roboto-Light.ttf',
+                      'Verdana.ttf',
                       ]
 
         # Spacing - 5px
@@ -126,7 +128,7 @@ class TextGenerator:
                                                            (posx, posy),
                                                            fontName,
                                                            fontSize,
-                                                           color=GetRandomBlackWhite())
+                                                           color=GetRandomPlateColor())
 
                 # 2. Annotating
                 # --------------------------

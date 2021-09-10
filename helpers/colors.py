@@ -63,6 +63,22 @@ def GetRandomBlackWhite():
     return colors[randint(0, len(colors)-1)]
 
 
+def GetRandomPlateColor():
+    '''
+        Returns next color from predefinied
+        table of example based colors.
+    .'''
+    colors = [(0, 0, 0),
+              (33, 33, 33),
+              orange,
+              red,
+              blue,
+              green,
+              (200, 200, 200),
+              (255, 255, 255)]
+    return colors[randint(0, len(colors)-1)]
+
+
 def GetOpposedColor(color):
     ''' Returns opposed color.'''
     r, g, b = color
